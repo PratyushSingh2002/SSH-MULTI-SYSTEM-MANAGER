@@ -8,9 +8,9 @@ def menu():
     print("3. Delete system")
     print("4. List systems")
     print("5. Connect to system")
-    print("6. Exit")
-    print("7. Run command on system")
-    print("8. Send file to system")
+    print("6. Run command on system")
+    print("7. Get system info")
+    print("8. Exit")
 
 while True:
     menu()
@@ -42,16 +42,16 @@ while True:
         connect_to_system(name)
 
     elif choice == "6":
-        print(f"{Fore.YELLOW}Exiting... Goodbye!")
-        break
-
-    elif choice == "7":
         name = input("Enter system name: ")
         run_command_on_system(name)
 
+    elif choice == "7":
+        name = input("Enter system name to get info: ")
+        get_system_info(name)
+
     elif choice == "8":
-        name = input("Enter system name to send file to: ")
-        send_file_to_system(name)
+        print(f"{Fore.YELLOW}Exiting... Goodbye!")
+        break
 
     else:
         print(f"{Fore.RED}Invalid choice. Please try again.")
