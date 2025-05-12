@@ -1,5 +1,5 @@
 
-# 🔐 SSH System Multi Manager
+# 🔐 SSH System Multi-Manager
 
 **A simple command-line tool to manage multiple SSH systems**  
 Created with ❤️ by **Pratyush Singh**
@@ -12,8 +12,9 @@ Created with ❤️ by **Pratyush Singh**
 - 📜 List all stored systems
 - 💻 Connect to remote systems via SSH
 - 🖥️ Run interactive terminal commands (e.g., `cd`, `mysqld`, `ls`, `top`, etc.)
-- 📁 Send local files to the remote system (to the `downloads` folder)
+- 🧠 Retrieve system information (e.g., `uname -a`) from connected systems
 - 🎨 Stylish terminal output using `colorama`
+- 🔐 Secure password storage using the `keyring` module
 
 ---
 
@@ -36,7 +37,7 @@ python -m venv venv
 
 - On **Windows**:
   ```bash
-  venv\Scripts\activate
+  venv\Scriptsctivate
   ```
 
 - On **Linux/macOS**:
@@ -71,8 +72,14 @@ Made by Pratyush Singh
 5. Connect to system
 6. Exit
 7. Run command on system
-8. Send file to system
+8. Get system info
 ```
+
+---
+
+## 🧳 System Info
+
+- The **Get system info** option retrieves and displays the basic system info (e.g., `uname -a`) of the remote system you connect to.
 
 ---
 
