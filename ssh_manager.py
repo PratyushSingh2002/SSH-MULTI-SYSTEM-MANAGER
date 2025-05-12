@@ -3,17 +3,24 @@ import os
 import paramiko
 import threading
 import time
+import keyring
 from colorama import init, Fore, Style
 
 init(autoreset=True)
 
 SYSTEMS_FILE = "systems.json"
+KEYRING_SERVICE = "ssh_manager"
 
 def load_systems():
     if not os.path.exists(SYSTEMS_FILE):
         return {}
+    
     with open(SYSTEMS_FILE, "r") as file:
-        return json.load(file)
+        content = file.read().strip()  # Read the content and strip any leading/trailing whitespace
+        if not content:  # If the file is empty, return an empty dictionary
+            return {}
+        return json.loads(content)  # Otherwise, load the JSON content
+
 
 def save_systems(systems):
     with open(SYSTEMS_FILE, "w") as file:
@@ -27,6 +34,10 @@ def add_system(name, username, host, port):
     systems[name] = {"username": username, "host": host, "port": port}
     save_systems(systems)
     print(f"{Fore.GREEN}System '{name}' added successfully.")
+
+    # Ask user for password and store it securely using keyring
+    password = input(f"Enter password for {username}@{host}: ")
+    keyring.set_password(KEYRING_SERVICE, f"{name}_{username}", password)
 
 def update_system(name, username=None, host=None, port=None):
     systems = load_systems()
@@ -49,6 +60,8 @@ def delete_system(name):
         return
     del systems[name]
     save_systems(systems)
+    # Remove password from keyring
+    keyring.delete_password(KEYRING_SERVICE, name)
     print(f"{Fore.YELLOW}System '{name}' deleted successfully.")
 
 def list_systems():
@@ -67,7 +80,12 @@ def connect_to_system(name):
         print(f"{Fore.RED}System '{name}' does not exist.")
         return
     info = systems[name]
-    password = input(f"Enter password for {info['username']}@{info['host']}: ")
+
+    # Retrieve the password from keyring
+    password = keyring.get_password(KEYRING_SERVICE, f"{name}_{info['username']}")
+    if not password:
+        print(f"{Fore.RED}Password not found for {info['username']}@{info['host']}.")
+        return
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -87,7 +105,12 @@ def run_command_on_system(name):
         print(f"{Fore.RED}System '{name}' does not exist.")
         return
     info = systems[name]
-    password = input(f"Enter password for {info['username']}@{info['host']}: ")
+
+    # Retrieve the password from keyring
+    password = keyring.get_password(KEYRING_SERVICE, f"{name}_{info['username']}")
+    if not password:
+        print(f"{Fore.RED}Password not found for {info['username']}@{info['host']}.")
+        return
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -155,7 +178,12 @@ def send_file_to_system(name):
 
     filename = local_files[choice - 1]
     info = systems[name]
-    password = input(f"Enter password for {info['username']}@{info['host']}: ")
+
+    # Retrieve the password from keyring
+    password = keyring.get_password(KEYRING_SERVICE, f"{name}_{info['username']}")
+    if not password:
+        print(f"{Fore.RED}Password not found for {info['username']}@{info['host']}.")
+        return
 
     try:
         transport = paramiko.Transport((info["host"], int(info["port"])))
