@@ -1,4 +1,4 @@
-#!/home/pratyush/Desktop/ssh-system-multimanager/venv/bin/python3
+#!/home/pratyush/Desktop/SSH-MULTI-SYSTEM-MANAGER/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

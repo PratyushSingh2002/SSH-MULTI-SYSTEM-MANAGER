@@ -6,6 +6,8 @@ import time
 import keyring
 from colorama import init, Fore, Style
 
+
+
 init(autoreset=True)
 
 SYSTEMS_FILE = "systems.json"
@@ -33,8 +35,11 @@ def add_system(name, username, host, port):
     systems[name] = {"username": username, "host": host, "port": port}
     save_systems(systems)
     print(f"{Fore.GREEN}System '{name}' added successfully.")
-    password = input(f"Enter password for {username}@{host}: ")
+
+    # Docker-friendly password handling
+    password = os.getenv("SYSTEM_PASSWORD") or input(f"Enter password for {username}@{host}: ")
     keyring.set_password(KEYRING_SERVICE, f"{name}_{username}", password)
+
 
 def update_system(name, username=None, host=None, port=None):
     systems = load_systems()

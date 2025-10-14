@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/pratyush/Desktop/ssh-system-multimanager/venv
+set -gx VIRTUAL_ENV /home/pratyush/Desktop/SSH-MULTI-SYSTEM-MANAGER/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH
