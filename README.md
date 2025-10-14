@@ -23,8 +23,8 @@ Created with ❤️ by **Pratyush Singh**
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/ssh-system-multi-manager.git
-cd ssh-system-multi-manager
+https://github.com/PratyushSingh2002/Nexa.git
+cd Nexa
 ```
 
 ### 2. Create a virtual environment
