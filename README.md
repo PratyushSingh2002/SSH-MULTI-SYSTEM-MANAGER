@@ -1,5 +1,5 @@
 
-# 🔐 SSH System Multi-Manager
+# 🔐 NEXA
 
 **A simple command-line tool to manage multiple SSH systems**  
 Created with ❤️ by **Pratyush Singh**
