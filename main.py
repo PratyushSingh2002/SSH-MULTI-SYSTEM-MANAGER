@@ -1,4 +1,15 @@
-from ssh_manager import *
+from ssh_manager import (
+    add_system,
+    update_system,
+    delete_system,
+    list_systems,
+    connect_to_system,
+    run_command_on_system,
+    get_system_info,
+    Fore,
+    Style,
+)
+
 
 def menu():
     print(f"\n{Fore.MAGENTA}===== SSH SYSTEM MULTI MANAGER ====={Style.RESET_ALL}")
@@ -11,6 +22,7 @@ def menu():
     print("6. Run command on system")
     print("7. Get system info")
     print("8. Exit")
+
 
 while True:
     menu()
@@ -55,4 +67,3 @@ while True:
 
     else:
         print(f"{Fore.RED}Invalid choice. Please try again.")
-
