@@ -38,6 +38,7 @@ def add_system(name, username, host, port):
     save_systems(systems)
     print(f"{Fore.GREEN}System '{name}' added successfully.")
 
+    # Docker-friendly password handling
     password = os.getenv("SYSTEM_PASSWORD") or input(
         f"Enter password for {username}@{host}: "
     )
