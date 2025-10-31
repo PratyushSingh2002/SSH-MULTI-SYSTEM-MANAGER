@@ -55,15 +55,24 @@ def update_system(name, username=None, host=None, port=None):
     save_systems(systems)
     print(f"{Fore.GREEN}System '{name}' updated successfully.")
 
+
 def delete_system(name):
     systems = load_systems()
     if name not in systems:
-        print(f"{Fore.RED}System '{name}' does not exist.")
+        print(f"{Fore.RED}System '{name}' not found.")
         return
+
+    username = systems[name]["username"]
+
+    try:
+        keyring.delete_password(KEYRING_SERVICE, f"{name}_{username}")
+        print(f"{Fore.YELLOW}Password deleted from keyring.")
+    except keyring.errors.PasswordDeleteError:
+        print(f"{Fore.YELLOW}⚠️ No stored password found for {name}.")
+
     del systems[name]
     save_systems(systems)
-    keyring.delete_password(KEYRING_SERVICE, name)
-    print(f"{Fore.YELLOW}System '{name}' deleted successfully.")
+    print(f"{Fore.GREEN}✅ System '{name}' deleted successfully.")
 
 def list_systems():
     systems = load_systems()
@@ -184,4 +193,44 @@ def get_system_info(name):
         ssh.close()
     except Exception as e:
         print(f"{Fore.RED}Failed to retrieve system info: {e}")
+
+def run_command_on_multiple_systems(names, command):
+    systems = load_systems()
+    threads = []
+
+    def worker(name):
+        if name not in systems:
+            print(f"{Fore.RED}[{name}] System not found.")
+            return
+
+        info = systems[name]
+        password = keyring.get_password("ssh_manager", f"{name}_{info['username']}")
+        if not password:
+            print(f"{Fore.RED}[{name}] Password not found.")
+            return
+
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        try:
+            ssh.connect(info["host"], port=int(info["port"]),
+                        username=info["username"], password=password)
+            stdin, stdout, stderr = ssh.exec_command(command)
+            output = stdout.read().decode().strip()
+            print(f"\n{Fore.GREEN}[{name}] Output:\n{Fore.WHITE}{output}\n")
+        except Exception as e:
+            print(f"{Fore.RED}[{name}] Error: {e}")
+        finally:
+            ssh.close()
+
+    for name in names:
+        thread = threading.Thread(target=worker, args=(name,))
+        thread.start()
+        threads.append(thread)
+
+    # Wait for all threads to finish
+    for t in threads:
+        t.join()
+
+    print(f"\n{Fore.YELLOW}✅ Command '{command}' executed on all systems.\n")
 
