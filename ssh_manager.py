@@ -126,7 +126,7 @@ def run_command_on_system(name):
     try:
         ssh.connect(info["host"], port=int(info["port"]),
                     username=info["username"], password=password)
-        print(f"\n{Fore.GREEN}Connected to {name}. Type {Fore.YELLOW}'exit'{Fore.GREEN} to end session.\n")
+        print(f"\n{Fore.GREEN}Connected to {name}. Type {Fore.YELLOW}'exit'{Fore.GREEN} or {Fore.YELLOW}'back'{Fore.GREEN} to return to main menu.\n")
 
         shell = ssh.invoke_shell()
         shell.settimeout(1)
@@ -148,13 +148,20 @@ def run_command_on_system(name):
 
         while True:
             command = input(f"{Fore.CYAN}ssh@{name}$ {Style.RESET_ALL}")
-            if command.strip().lower() == "exit":
-                print(f"{Fore.YELLOW}Closing SSH session...\n")
+            if command.strip().lower() in ["exit", "back"]:
+                print(f"{Fore.YELLOW}Closing SSH session and returning to main menu...\n")
                 shell.close()
                 break
             shell.send(command + "\n")
 
         ssh.close()
+
+    except KeyboardInterrupt:
+        print(f"\n{Fore.YELLOW}Session interrupted. Returning to main menu...\n")
+        try:
+            ssh.close()
+        except:
+            pass
 
     except Exception as e:
         print(f"{Fore.RED}Failed to connect or run command: {e}")
