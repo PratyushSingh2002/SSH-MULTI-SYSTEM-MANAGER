@@ -35,6 +35,8 @@ try:
             add_system(name, username, host, port)
 
         elif choice == "2":
+            list_systems()
+            print("Enter the name from above system Available")
             name = input("Enter system name to update: ")
             username = input("New username (leave blank to keep): ")
             host = input("New host (leave blank to keep): ")
@@ -42,6 +44,8 @@ try:
             update_system(name, username or None, host or None, port or None)
 
         elif choice == "3":
+            list_systems()
+            print("Enter the name from above system Available")
             name = input("Enter system name to delete: ")
             delete_system(name)
 
@@ -49,10 +53,14 @@ try:
             list_systems()
 
         elif choice == "5":
+            list_systems()
+            print("Enter the name from above system Available")
             name = input("Enter system name to connect: ")
             connect_to_system(name)
 
         elif choice == "6":
+            list_systems()
+            print("Enter the name from above system Available")
             name = input("Enter system name: ")
             run_command_on_system(name)
 
